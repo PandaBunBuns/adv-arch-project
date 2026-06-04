@@ -14,7 +14,7 @@ def convert(rd_str, rs1_str, rs2_str, x_str):
     if "x" not in x_str: 
         x_str = reg_dict[x_str]
         x = int(x_str.replace('x', '').replace(',', ''))
-    elif x_str.isdigit(): imm = int(x_str) 
+    elif x_str.isdigit(): x = int(x_str) 
     else: x = int(x_str.replace('x', '').replace(',', ''))
 
     return rd, rs1, rs2, x
