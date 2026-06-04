@@ -63,8 +63,8 @@ if st.button("Assemble"):
                     st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
                 
                 elif instruction_info["type"] == "I_shift":
-                    rd_str = reg_dict[x]
-                    rs1_str = reg_dict[y]
+                    rd_str = x
+                    rs1_str = y
                     shamt_str = z
                     hex_result = assemble_i_shift_type(
                         instruction_info["opcode"], 
