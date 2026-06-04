@@ -35,24 +35,24 @@ if st.button("Assemble"):
                 
                 # Check the type to route it to the correct assembler function
                 if instruction_info["type"] == "R":
-                    rs1_str = x
-                    rs2_str = y
-                    rd_str = z
+                    rd_str = x
+                    rs1_str = y
+                    rs2_str = z
                     hex_result = assemble_r_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"], 
                         instruction_info["funct7"], 
-                        rs1_str, rs2_str, rd_str
+                        rd_str, rs1_str, rs2_str
                     )
                     # st.warning("R-Type assembler function not built yet!")
                     st.success("Assembly Successful!")
                     st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
 
                 elif instruction_info["type"] == "I":
-                    rd_str = reg_dict[x]
+                    rd_str = x
                     y_split = y.split("(")
                     imm_val = y_split[0]
-                    rs1_str = reg_dict[y_split[1][:-1]]
+                    rs1_str = y_split[1][:-1]
                     hex_result = assemble_i_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"], 
@@ -65,18 +65,27 @@ if st.button("Assemble"):
                 elif instruction_info["type"] == "I_shift":
                     rd_str = reg_dict[x]
                     rs1_str = reg_dict[y]
+                    shamt_str = z
                     hex_result = assemble_i_shift_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"], 
                         instruction_info["funct7"], 
-                        x, y, z
+                        rd_str, rs1_str, shamt_str
                     )
-                    st.warning("I-Type assembler function not built yet!")
-                    # st.success("Assembly Successful!")
-                    # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
+                    # st.warning("I-Type assembler function not built yet!")
+                    st.success("Assembly Successful!")
+                    st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
 
                 elif instruction_info["type"] == "S":
-                    # hex_result = assemble_s_type(...)
+                    rs1_str = x
+                    y_split = y.split("(")
+                    imm_val = y_split[0]
+                    rs2_str = y_split[1][:-1]
+                    hex_result = assemble_s_type(
+                        instruction_info["opcode"], 
+                        instruction_info["funct3"],  
+                        rs1_str, imm_val, rs2_str
+                    )
                     st.warning("S-Type assembler function not built yet!")
                     # st.success("Assembly Successful!")
                     # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
