@@ -27,8 +27,12 @@ if st.button("Assemble"):
             x = parts[1]
             y = parts[2]
             print(len(parts))
+            print(x)
+            print(y)
+
             if len(parts) > 3:
                 z = parts[3]
+                print(z)
             
             if mnemonic in isa_dict:
                 instruction_info = isa_dict[mnemonic]
@@ -53,6 +57,8 @@ if st.button("Assemble"):
                     y_split = y.split("(")
                     imm_val = y_split[0]
                     rs1_str = y_split[1][:-1]
+                    print(imm_val)
+                    print(rs1_str)
                     hex_result = assemble_i_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"], 
@@ -77,18 +83,18 @@ if st.button("Assemble"):
                     st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
 
                 elif instruction_info["type"] == "S":
-                    rs1_str = x
+                    rs2_str = x
                     y_split = y.split("(")
                     imm_val = y_split[0]
-                    rs2_str = y_split[1][:-1]
+                    rs1_str = y_split[1][:-1]
                     hex_result = assemble_s_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"],  
                         rs1_str, imm_val, rs2_str
                     )
-                    st.warning("S-Type assembler function not built yet!")
-                    # st.success("Assembly Successful!")
-                    # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
+                    # st.warning("S-Type assembler function not built yet!")
+                    st.success("Assembly Successful!")
+                    st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
 
                 elif instruction_info["type"] == "B":
                     rs1_str = x
