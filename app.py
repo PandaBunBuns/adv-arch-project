@@ -11,7 +11,7 @@ st.subheader("Milestone #1: Parser & Opcode Generator")
 error_container = st.empty()
 
 # The Code Editor Input
-code_input = st.text_area("Assembly Code Input (Try typing: BEQ x1, x2, 8)", height=150)
+code_input = st.text_area("Assembly Code Input", height=150)
 
 if st.button("Assemble"):
     if not code_input.strip():
