@@ -19,6 +19,7 @@ if st.button("Assemble"):
     else:
         try:
             parts = code_input.strip().split()
+            print("Extracted Text: \n", parts)
             
             # if len(parts) != 4:
             #     raise ValueError("Syntax Error: Expected format 'MNEMONIC x, y, z'")
@@ -26,15 +27,17 @@ if st.button("Assemble"):
             mnemonic = parts[0].upper()
             x = parts[1]
             y = parts[2]
-            print(len(parts))
-            print(x)
-            print(y)
+            print("LENGTH: ", len(parts))
+            print("mnemonic: ", mnemonic)
+            print("A: ", x)
+            print("B/Immediate: ", y)
 
             if len(parts) > 3:
                 z = parts[3]
                 print(z)
             
-            if mnemonic in isa_dict:
+            if mnemonic in isa_dict: 
+                
                 instruction_info = isa_dict[mnemonic]
                 
                 # Check the type to route it to the correct assembler function
@@ -57,8 +60,8 @@ if st.button("Assemble"):
                     y_split = y.split("(")
                     imm_val = y_split[0]
                     rs1_str = y_split[1][:-1]
-                    print(imm_val)
-                    print(rs1_str)
+                    print("imm_val: ", imm_val)
+                    print("rs1_str: ", rs1_str)
                     hex_result = assemble_i_type(
                         instruction_info["opcode"], 
                         instruction_info["funct3"], 
@@ -107,6 +110,7 @@ if st.button("Assemble"):
                     )
                     st.success("Assembly Successful!")
                     st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
+
                 else:
                     error_container.warning(f"The assembler logic for {instruction_info['type']}-Type instructions isn't built yet!")
             else:
