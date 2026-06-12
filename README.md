@@ -10,5 +10,6 @@ We have implemented opcode generation for each instruction. Each line is parsed 
 **Frances Danielle Solis**<br>
 **Kaizen Edwin Rodriguez**<br>
 # Demonstration Video
-<video src="https://youtu.be/DKUcyWy09rM"  controls></video><br>
+[![Demonstration Video](https://markdown-videos-api.jorgenkh.no/youtube/DKUcyWy09rM)](https://youtu.be/DKUcyWy09rM)
+
 Link: <a href="https://youtu.be/DKUcyWy09rM">https://youtu.be/DKUcyWy09rM</a>
