@@ -1,4 +1,5 @@
 from dicts import isa_dict, reg_dict
+# import streamlit as st
 
 def try_convert(x_str):
     try:
@@ -10,22 +11,33 @@ def try_convert(x_str):
 
 def convert(x_str, if_int=False):
     x_str = x_str.replace(',', '')
+
+    # Immediate value
     if if_int:
-        print(if_int)
+        print("immediate value")
+        print("x_str: ", x_str, "\t", "if_int:", if_int)
         if try_convert(x_str):
             x = int(x_str) 
         elif "x" not in x_str:
             x_str = reg_dict[x_str]
             x = int(x_str.replace('x', ''))
         else: x = int(x_str.replace('x', ''))
-        
+
+    # Register Value 
     else:
-        print(if_int)
+        print("register value")
+        print("x_str: ", x_str, "\t", "if_int:", if_int)
         # Checks if the address is a variable
         if "x" not in x_str: x_str = reg_dict[x_str]
 
         # Removes "x" from hex
         x = int(x_str.replace('x', ''))
+        print(x)
+
+        # Limit range from x1 to x31
+        if (x>31 ):
+            print("Invalid register range")
+            raise ValueError("No registers above x31")
 
     return x
 
