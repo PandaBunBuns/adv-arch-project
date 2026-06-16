@@ -11,6 +11,10 @@ Initializing the environment</br>
 ```source venv/Scripts/activate```
 </br>
 </br>
+Install dependencies</br>
+```pip install -r requirements.txt```
+</br>
+</br>
 Running the application </br>
 ```streamlit run app.py ```
 
