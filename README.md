@@ -8,6 +8,9 @@ We have implemented opcode generation for each instruction. Each line is parsed 
 
 ## Running the Program
 Initializing the environment</br>
+```python -m venv venv```
+
+Activating the environment</br>
 ```source venv/Scripts/activate```
 </br>
 </br>
