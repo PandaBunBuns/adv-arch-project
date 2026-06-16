@@ -6,6 +6,14 @@ We are using streamlit as our web framework.
 
 We have implemented opcode generation for each instruction. Each line is parsed for its mnemonic, rs1, rs2, and immediate parameters, as well as checking for branch instructions and branch labels. For this milestone, we've decided to utilize a symbol table for handling branching. 
 
+## Running the Program
+Initializing the environment</br>
+```source venv/Scripts/activate```
+</br>
+</br>
+Running the application </br>
+```streamlit run app.py ```
+
 ## Authors
 **Frances Danielle Solis**<br>
 **Kaizen Edwin Rodriguez**<br>
