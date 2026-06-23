@@ -1,6 +1,7 @@
 import streamlit as st
 from dicts import isa_dict, reg_dict
 from assembler import assemble_r_type, assemble_i_type, assemble_i_shift_type, assemble_s_type, assemble_b_type
+from parser import parse_and_assemble
 
 st.set_page_config(page_title="µRISCV Assembler", layout="wide")
 
@@ -18,177 +19,16 @@ if st.button("Assemble"):
         error_container.error("Error: Please enter some assembly code.")
     else:
         try:
-            parts_newLine = code_input.split('\n')
-            lines = []
-            symbol_table={}
-            current_pc = 0
+            opcodes = parse_and_assemble(code_input, isa_dict)
 
-            opcodes =[]
-            output =[]
+            st.success("Assembly Successful!")
+            st.code(f"Original:\n{code_input}\nHex Opcode: {opcodes}", language="plaintext")
+        
+        except ValueError as ve:
+            error_container.error(f"Error: {ve}")
 
-
-            for line in parts_newLine:
-                temp = line.split()
-                if ':' in line:
-                    label, rest = line.split(':', 1)
-                    symbol_table[label.strip()] = current_pc
-
-                    print("label: ", label)
-                    print("rest: ", rest)
-
-                    # Address code past the semicolon
-                    rest = rest.strip()
-
-                    if rest:
-                        lines.append((current_pc, rest.split()))
-                        current_pc +=4
-                        
-
-                else:
-                    lines.append((current_pc, temp))
-                    current_pc +=4
-
-
-            print(lines)
-            
-            for pc, parts in lines:
-                mnemonic = parts[0].upper()
-                x = parts[1]
-                y = parts[2]
-                print("\nInstruction #", pc)
-                print("LENGTH: ", len(parts))
-                print("mnemonic: ", mnemonic)
-                print("A: ", x)
-                print("B: ", y)
-
-                if len(parts) > 3:
-                    z = parts[3]
-                    # print("Immediate:" , z)
-            
-                if mnemonic in isa_dict: 
-
-                    instruction_info = isa_dict[mnemonic]
-
-                    # Check the type to route it to the correct assembler function
-                    if instruction_info["type"] == "R":
-                        rd_str = x
-                        rs1_str = y
-                        rs2_str = z
-                        hex_result = assemble_r_type(
-                            instruction_info["opcode"], 
-                            instruction_info["funct3"], 
-                            instruction_info["funct7"], 
-                            rd_str, rs1_str, rs2_str
-                        )
-                        # st.warning("R-Type assembler function not built yet!")
-                        # st.success("Assembly Successful!")
-                        # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
-
-                        # opcodes.append(hex_result)
-                        # output.append(f"{parts}\t{hex_result}\n")
-
-                    elif instruction_info["type"] == "I":
-                        rd_str = x
-                        y_split = y.split("(")
-                        imm_val = y_split[0]
-                        rs1_str = y_split[1][:-1]
-                        print("imm_val: ", imm_val)
-                        print("rs1_str: ", rs1_str)
-                        hex_result = assemble_i_type(
-                            instruction_info["opcode"], 
-                            instruction_info["funct3"], 
-                            rd_str, imm_val, rs1_str
-                        )
-                        # st.warning("I-Type assembler function not built yet!")
-                        # st.success("Assembly Successful!")
-                        # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
-
-
-                        # opcodes.append(hex_result)
-                        # output.append(f"{parts}\t{hex_result}\n")
-
-                    elif instruction_info["type"] == "I_shift":
-                        rd_str = x
-                        rs1_str = y
-                        shamt_str = z
-                        hex_result = assemble_i_shift_type(
-                            instruction_info["opcode"], 
-                            instruction_info["funct3"], 
-                            instruction_info["funct7"], 
-                            rd_str, rs1_str, shamt_str
-                        )
-                        # st.warning("I-Type assembler function not built yet!")
-                        # st.success("Assembly Successful!")
-                        # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
-                        # opcodes.append(hex_result)
-                        # output.append(f"{parts}\t{hex_result}\n")
-
-                    elif instruction_info["type"] == "S":
-                        rs2_str = x
-                        y_split = y.split("(")
-                        imm_val = y_split[0]
-                        rs1_str = y_split[1][:-1]
-                        hex_result = assemble_s_type(
-                            instruction_info["opcode"], 
-                            instruction_info["funct3"],  
-                            rs1_str, imm_val, rs2_str
-                        )
-                        # st.warning("S-Type assembler function not built yet!")
-                        # st.success("Assembly Successful!")
-                        # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
-                        
-                        # opcodes.append(hex_result)
-                        # output.append(f"{parts}\t{hex_result}\n")
-
-                    elif instruction_info["type"] == "B":
-                        rs1_str = x
-                        rs2_str = y
-                        # imm_val = int(z)
-                        # imm_val = str(z)
-                        target_label = z
-
-                        # Calculate offset
-                        if target_label in symbol_table:
-                            target_pc = symbol_table[target_label]
-                            offset = target_pc -pc
-                        else:
-                            try:
-                                offset = int(target_label)
-                            except ValueError:
-                                raise ValueError(f"Label '{target_label}' not found.")
-
-                        hex_result = assemble_b_type(
-                            instruction_info["opcode"], 
-                            instruction_info["funct3"], 
-                            rs1_str, rs2_str, str(offset)
-                        )
-                        # st.success("Assembly Successful!")
-                        # st.code(f"Original: {code_input}\nHex Opcode: {hex_result}", language="plaintext")
-
-                        # opcodes.append(hex_result)
-                        # output.append(f"{parts}\t{hex_result}\n")
-
-                    else:
-                        error_container.warning(f"The assembler logic for {instruction_info['type']}-Type instructions isn't built yet!")
-                        st.stop()
-                    
-                    # Output formatting
-                    opcodes.append(hex_result)
-                    
-
-                else:
-                    error_container.error(f"Error: Instruction '{mnemonic}' is not currently supported in this demo.")
-                    st.stop()
-
-            
-                
+        except NotImplementedError as nie:
+            error_container.warning(f"Warning: {nie}")
+        
         except Exception as e:
             error_container.error(f"Parsing Error: {str(e)}")
-            st.stop()
-            
-            
-
-        # if (error_container == False) :
-        st.success("Assembly Successful!")
-        st.code(f"Original:\n{code_input}\nHex Opcode: {opcodes}", language="plaintext")
-        # st.code(output, language="plaintext")
